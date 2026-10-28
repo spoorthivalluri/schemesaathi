@@ -2,7 +2,7 @@
 SchemeSaathi Deterministic Eligibility Engine
 Strictly evaluates a user profile against official verified scheme criteria.
 Statuses: 'Satisfied', 'Not satisfied', 'Needs information', 'Not applicable'
-Overall Scheme Assessment: 'potential_match', 'unmet', 'needs_information'
+Overall Scheme Assessment: 'likely_match', 'more_info_needed', 'doesnt_match'
 """
 from typing import Dict, Any, List, Optional
 import json
@@ -13,9 +13,14 @@ STATUS_NOT_SATISFIED = "Not satisfied"
 STATUS_NEEDS_INFO = "Needs information"
 STATUS_NOT_APPLICABLE = "Not applicable"
 
-ASSESSMENT_POTENTIAL_MATCH = "potential_match"
-ASSESSMENT_UNMET = "unmet"
-ASSESSMENT_NEEDS_INFO = "needs_information"
+ASSESSMENT_LIKELY_MATCH = "likely_match"
+ASSESSMENT_DOESNT_MATCH = "doesnt_match"
+ASSESSMENT_MORE_INFO_NEEDED = "more_info_needed"
+
+# Aliases for backwards compatibility
+ASSESSMENT_POTENTIAL_MATCH = "likely_match"
+ASSESSMENT_UNMET = "doesnt_match"
+ASSESSMENT_NEEDS_INFO = "more_info_needed"
 
 
 class EligibilityEngine:
@@ -176,7 +181,11 @@ class EligibilityEngine:
                 source_excerpt=source_excerpt
             ))
         else:
-            cat_match = any(user_category.upper() == c.upper() or (user_category.upper() == "OBC" and c.upper() == "BC") for c in scheme_categories)
+            cat_match = any(
+                user_category.upper() == c.upper()
+                or (user_category.upper() in ["BC", "OBC"] and c.upper() in ["BC", "OBC"])
+                for c in scheme_categories
+            )
             if cat_match:
                 criteria.append(self.evaluate_criterion(
                     name="category",
@@ -218,7 +227,7 @@ class EligibilityEngine:
         else:
             # Determine specific limit based on category or locality
             applicable_limit = scheme.get("income_limit", 0)
-            locality = profile.get("locality", "urban").lower()  # default to urban if unknown or check
+            locality = profile.get("locality", "urban").lower()
 
             if scheme_id == "telangana-epass-postmatric" and user_category:
                 cat_upper = user_category.upper()
@@ -273,7 +282,6 @@ class EligibilityEngine:
                 source_excerpt=source_excerpt
             ))
         else:
-            # Check course compatibility
             course_matched = False
             if user_course:
                 course_norm = user_course.lower().replace(".", "").replace(" ", "")
@@ -290,7 +298,6 @@ class EligibilityEngine:
                         level_matched = True
                         break
 
-            # If user course or level matches
             if course_matched or level_matched:
                 criteria.append(self.evaluate_criterion(
                     name="course_level",
@@ -376,10 +383,10 @@ class EligibilityEngine:
                 is_mandatory=False
             ))
 
-        # Overall Status Calculation
-        # Rule 1: A failed mandatory criterion must not be hidden. Any mandatory NOT_SATISFIED => UNMET
-        # Rule 2: Missing mandatory information => NEEDS_INFO
-        # Rule 3: All mandatory criteria SATISFIED => POTENTIAL_MATCH
+        # Overall Status Calculation (Consistently using 3 exact statuses)
+        # - Likely match: All known mandatory eligibility conditions appear satisfied.
+        # - More information needed: At least one important condition remains unknown or unconfirmed.
+        # - Doesn't match: At least one verified mandatory condition is not satisfied.
         has_failed_mandatory = any(
             c["status"] == STATUS_NOT_SATISFIED and c["is_mandatory"] for c in criteria
         )
@@ -388,17 +395,17 @@ class EligibilityEngine:
         )
 
         if has_failed_mandatory:
-            overall_assessment = ASSESSMENT_UNMET
-            overall_label = "A requirement appears unmet"
-            reason_summary = "One or more verified mandatory requirements are not satisfied based on your profile."
+            overall_assessment = ASSESSMENT_DOESNT_MATCH
+            overall_label = "Doesn't match"
+            reason_summary = "At least one verified mandatory condition is not satisfied based on your profile."
         elif has_missing_mandatory:
-            overall_assessment = ASSESSMENT_NEEDS_INFO
-            overall_label = "More information required"
-            reason_summary = "Key profile details (such as income, state, or course) are required to complete verification."
+            overall_assessment = ASSESSMENT_MORE_INFO_NEEDED
+            overall_label = "More information needed"
+            reason_summary = "At least one important condition remains unknown or unconfirmed based on your profile."
         else:
-            overall_assessment = ASSESSMENT_POTENTIAL_MATCH
-            overall_label = "Potential match"
-            reason_summary = "All evaluated mandatory criteria appear satisfied based on your provided information."
+            overall_assessment = ASSESSMENT_LIKELY_MATCH
+            overall_label = "Likely match"
+            reason_summary = "All known mandatory eligibility conditions appear satisfied based on your provided information."
 
         return {
             "scheme": scheme,
@@ -421,9 +428,9 @@ class EligibilityEngine:
             res = self.evaluate_scheme(scheme, profile)
             results.append(res)
 
-        potential_matches = [r for r in results if r["overall_assessment"] == ASSESSMENT_POTENTIAL_MATCH]
-        needs_info = [r for r in results if r["overall_assessment"] == ASSESSMENT_NEEDS_INFO]
-        unmet = [r for r in results if r["overall_assessment"] == ASSESSMENT_UNMET]
+        likely_matches = [r for r in results if r["overall_assessment"] == ASSESSMENT_LIKELY_MATCH]
+        more_info_needed = [r for r in results if r["overall_assessment"] == ASSESSMENT_MORE_INFO_NEEDED]
+        doesnt_match = [r for r in results if r["overall_assessment"] == ASSESSMENT_DOESNT_MATCH]
 
         # Extract missing fields across all schemes
         missing_fields = set()
@@ -441,13 +448,21 @@ class EligibilityEngine:
         return {
             "summary": {
                 "total_schemes": len(self.schemes),
-                "potential_matches_count": len(potential_matches),
-                "needs_info_count": len(needs_info),
-                "unmet_count": len(unmet),
+                "likely_match_count": len(likely_matches),
+                "more_info_needed_count": len(more_info_needed),
+                "doesnt_match_count": len(doesnt_match),
+                # Backwards-compatibility aliases
+                "potential_matches_count": len(likely_matches),
+                "needs_info_count": len(more_info_needed),
+                "unmet_count": len(doesnt_match),
                 "missing_fields": list(missing_fields)
             },
-            "potential_matches": potential_matches,
-            "needs_info": needs_info,
-            "unmet": unmet,
+            "likely_matches": likely_matches,
+            "more_info_needed": more_info_needed,
+            "doesnt_match": doesnt_match,
+            # Backwards-compatibility aliases
+            "potential_matches": likely_matches,
+            "needs_info": more_info_needed,
+            "unmet": doesnt_match,
             "all_results": results
         }

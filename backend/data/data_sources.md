@@ -7,6 +7,7 @@ Each scheme in `backend/data/schemes.json` is backed by official government guid
 
 ## 1. Telangana ePASS Post-Matric Scholarship (RTF & MTF)
 - **Administering Authority**: Department of Backward Classes Welfare, Social Welfare, Tribal Welfare, and Minorities Welfare, Government of Telangana.
+- **Verified Key Benefit**: Full Tuition Fee Reimbursement (RTF) + Monthly Maintenance Allowance (MTF up to ₹20,000/yr).
 - **Official Portal**: [https://telanganaepass.cgg.gov.in/](https://telanganaepass.cgg.gov.in/)
 - **Guidelines URL**: [https://telanganaepass.cgg.gov.in/PostmatricDetails.do](https://telanganaepass.cgg.gov.in/PostmatricDetails.do)
 - **Last Verified Date**: October 15, 2024
@@ -22,6 +23,7 @@ Each scheme in `backend/data/schemes.json` is backed by official government guid
 
 ## 2. AICTE Pragati Scholarship for Girl Students
 - **Administering Authority**: All India Council for Technical Education (AICTE), Ministry of Education, Government of India.
+- **Verified Key Benefit**: ₹50,000 per annum towards tuition fee and educational expenses (for up to 4 years).
 - **Official Portal**: [https://scholarships.gov.in/](https://scholarships.gov.in/)
 - **Guidelines URL**: [https://www.aicte-india.org/schemes/students-development-schemes/Pragati](https://www.aicte-india.org/schemes/students-development-schemes/Pragati)
 - **Last Verified Date**: September 20, 2024
@@ -35,6 +37,7 @@ Each scheme in `backend/data/schemes.json` is backed by official government guid
 
 ## 3. Central Sector Scheme of Scholarship for College and University Students (PM-USP CSSS)
 - **Administering Authority**: Department of Higher Education, Ministry of Education, Government of India.
+- **Verified Key Benefit**: ₹12,000/yr for Graduation (Years 1-3) and ₹20,000/yr for Post-Graduation.
 - **Official Portal**: [https://scholarships.gov.in/](https://scholarships.gov.in/)
 - **Guidelines URL**: [https://www.education.gov.in/sites/upload_files/mhrd/files/upload_document/CSSS_Guidelines.pdf](https://www.education.gov.in/sites/upload_files/mhrd/files/upload_document/CSSS_Guidelines.pdf)
 - **Last Verified Date**: August 30, 2024
@@ -48,6 +51,7 @@ Each scheme in `backend/data/schemes.json` is backed by official government guid
 
 ## 4. PM-YASASVI Top Class College Education for OBC, EBC & DNT Students
 - **Administering Authority**: Ministry of Social Justice and Empowerment, Government of India.
+- **Verified Key Benefit**: Full tuition fee reimbursement + ₹86,000/yr living expenses + ₹45,000 one-time computer grant.
 - **Official Portal**: [https://scholarships.gov.in/](https://scholarships.gov.in/)
 - **Guidelines URL**: [https://socialjustice.gov.in/schemes/top-class-education-for-obc](https://socialjustice.gov.in/schemes/top-class-education-for-obc)
 - **Last Verified Date**: July 15, 2024
@@ -61,6 +65,7 @@ Each scheme in `backend/data/schemes.json` is backed by official government guid
 
 ## 5. Telangana Overseas Vidya Nidhi
 - **Administering Authority**: Welfare Departments (BC, SC, ST, Minorities), Government of Telangana.
+- **Verified Key Benefit**: Scholarship grant of up to ₹20,00,000 (Twenty Lakhs) + one-way economy airfare.
 - **Official Portal**: [https://telanganaepass.cgg.gov.in/OverseasLinks.do](https://telanganaepass.cgg.gov.in/OverseasLinks.do)
 - **Government Order Reference**: G.O.Ms.No.23 & subsequent welfare department amendments.
 - **Last Verified Date**: September 10, 2024

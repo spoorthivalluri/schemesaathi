@@ -142,9 +142,9 @@ Answer the user's question directly using ONLY the facts above. If not answered 
         needs_info = [c for c in criteria if c["status"] == "Needs information"]
 
         parts = []
-        if assessment == "potential_match":
+        if assessment in ["likely_match", "potential_match"]:
             parts.append(
-                f"Based on your provided profile, {scheme.get('name')} appears to be a **Potential Match**. Your reported qualifications meet all primary mandatory requirements verified in our knowledge base."
+                f"Based on your provided profile, {scheme.get('name')} is a **Likely match**. Your reported qualifications meet all primary mandatory requirements verified in our knowledge base."
             )
             if satisfied:
                 parts.append("Specifically:")
@@ -155,9 +155,9 @@ Answer the user's question directly using ONLY the facts above. If not answered 
                 for n in needs_info:
                     parts.append(f"• **{n['label']}**: {n['explanation']}")
 
-        elif assessment == "unmet":
+        elif assessment in ["doesnt_match", "unmet"]:
             parts.append(
-                f"Based on the official criteria for {scheme.get('name')}, **a requirement appears unmet**."
+                f"Based on the official criteria for {scheme.get('name')}, **this scheme doesn't match** your current profile."
             )
             for ns in not_satisfied:
                 parts.append(f"• **{ns['label']} unmet**: {ns['explanation']} (Official rule: *{ns['requirement']}*)")
@@ -167,7 +167,7 @@ Answer the user's question directly using ONLY the facts above. If not answered 
 
         else:
             parts.append(
-                f"For {scheme.get('name')}, **more information is required** before eligibility can be assessed."
+                f"For {scheme.get('name')}, **more information is needed** before eligibility can be verified."
             )
             for ni in needs_info:
                 parts.append(f"• **{ni['label']}**: {ni['explanation']}")

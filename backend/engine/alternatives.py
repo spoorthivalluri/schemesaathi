@@ -9,9 +9,9 @@ from .eligibility import (
     STATUS_NOT_SATISFIED,
     STATUS_SATISFIED,
     STATUS_NEEDS_INFO,
-    ASSESSMENT_POTENTIAL_MATCH,
-    ASSESSMENT_NEEDS_INFO,
-    ASSESSMENT_UNMET
+    ASSESSMENT_LIKELY_MATCH,
+    ASSESSMENT_MORE_INFO_NEEDED,
+    ASSESSMENT_DOESNT_MATCH
 )
 
 class BridgeTheGapEngine:
@@ -46,8 +46,7 @@ class BridgeTheGapEngine:
                 continue
 
             evaluation = self.engine.evaluate_scheme(scheme, profile)
-            # If the scheme is a potential match or needs info (but has NO failed mandatory criteria)
-            # Or if it specifically resolves the exact failed criterion (e.g. higher income ceiling)
+            # Check if this alternative has any failed mandatory criteria
             has_failed_criteria = any(
                 c["status"] == STATUS_NOT_SATISFIED and c["is_mandatory"]
                 for c in evaluation["criteria"]
@@ -68,7 +67,7 @@ class BridgeTheGapEngine:
             relevance_note = ""
             is_viable_alternative = False
 
-            # Check if this scheme offers relief for the failed criteria
+            # Check if this scheme specifically offers relief for the failed criteria
             for fc in failed_criteria:
                 if fc["name"] == "income":
                     other_limit = scheme.get("income_limit", 0)
@@ -85,21 +84,22 @@ class BridgeTheGapEngine:
                         relevance_note = "Centrally sponsored national scheme open across all Indian states."
                         is_viable_alternative = True
 
-            # If it's a clean potential match overall
-            if evaluation["overall_assessment"] == ASSESSMENT_POTENTIAL_MATCH:
+            # If it's a likely match overall
+            if evaluation["overall_assessment"] == ASSESSMENT_LIKELY_MATCH:
                 is_viable_alternative = True
                 if not relevance_note:
                     relevance_note = "Your reported profile satisfies all mandatory requirements for this scheme."
-            elif evaluation["overall_assessment"] == ASSESSMENT_NEEDS_INFO and not has_failed_criteria:
+            elif evaluation["overall_assessment"] == ASSESSMENT_MORE_INFO_NEEDED and not has_failed_criteria:
                 is_viable_alternative = True
                 if not relevance_note:
-                    relevance_note = "No disqualifying criteria found; additional documentation/information required."
+                    relevance_note = "No disqualifying criteria found; additional documentation or confirmation required."
 
-            if is_viable_alternative:
+            if is_viable_alternative and not has_failed_criteria:
                 alternatives.append({
                     "scheme_id": scheme["id"],
                     "scheme_name": scheme["name"],
                     "administering_authority": scheme.get("administering_authority"),
+                    "key_benefit": scheme.get("key_benefit", ""),
                     "assessment": evaluation["overall_assessment"],
                     "assessment_label": evaluation["overall_label"],
                     "relevance_explanation": relevance_note,
@@ -112,8 +112,6 @@ class BridgeTheGapEngine:
                     "required_documents": scheme.get("required_documents", [])
                 })
 
-        # Master prompt fallback requirement:
-        # If no alternative is found in the limited dataset, state exactly:
         fallback_message = "No suitable alternative was identified in the schemes currently available in SchemeSaathi. This does not mean you are ineligible for every government scheme."
 
         return {

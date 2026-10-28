@@ -1,16 +1,16 @@
 /**
- * SchemeSaathi Demonstration Scenarios for Judges
- * Strictly adheres to verified government scheme rules in the knowledge base.
+ * SchemeSaathi Demonstration Scenarios for Evaluators
+ * Strictly reflects verified government scheme criteria.
  */
 export const DEMO_SCENARIOS = [
   {
     id: "scenario-1",
-    title: "Scenario 1: Potential Match",
+    title: "Scenario A: Likely Match",
     tagline: "First-Year B.Tech Student in Telangana (Income: ₹1.8 Lakh)",
-    badge: "Potential Match",
+    badge: "Likely match",
     badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-300",
     description:
-      "A student in Telangana studying B.Tech with parental income ₹1.8 Lakh and BC category meets all known mandatory criteria for the Telangana ePASS Post-Matric Scholarship.",
+      "A student in Telangana studying B.Tech with parental income ₹1.8 Lakh and BC category satisfies all known mandatory conditions for the Telangana ePASS Post-Matric Scholarship.",
     profile: {
       state: "Telangana",
       course: "B.Tech",
@@ -22,16 +22,16 @@ export const DEMO_SCENARIOS = [
       age: 19
     },
     sampleSpeech: "I am a first-year B.Tech student in Telangana. My family's annual income is around 1.8 lakh and I belong to BC category.",
-    expectedOutcome: "Telangana ePASS matches as Potential Match. Criteria breakdown displays verified income ceiling and document prerequisites."
+    expectedOutcome: "Telangana ePASS is identified as a Likely match. Verified income ceiling and required certificates are displayed with official citations."
   },
   {
     id: "scenario-2",
-    title: "Scenario 2: Known Failed Requirement & Bridge the Gap",
+    title: "Scenario B: Doesn't Match & Bridge the Gap",
     tagline: "Female B.Tech Student (Income: ₹3.5 Lakh, exceeds ePASS ceiling)",
-    badge: "Unmet Requirement + Bridge Alternatives",
+    badge: "Doesn't match",
     badgeColor: "bg-rose-100 text-rose-800 border-rose-300",
     description:
-      "A female B.Tech student in Telangana with family income ₹3.5 Lakh fails the ePASS ₹2.0 Lakh threshold. SchemeSaathi immediately triggers 'Bridge the Gap' and highlights AICTE Pragati (₹8L ceiling) and Central Sector CSSS (₹4.5L ceiling) using the exact same deterministic engine.",
+      "A female B.Tech student with family income ₹3.5 Lakh exceeds the ePASS ₹2.0 Lakh limit. The engine marks it as 'Doesn't match' and immediately offers Bridge the Gap alternatives like AICTE Pragati (₹8L limit) and CSSS (₹4.5L limit).",
     profile: {
       state: "Telangana",
       course: "B.Tech",
@@ -43,16 +43,16 @@ export const DEMO_SCENARIOS = [
       age: 18
     },
     sampleSpeech: "I am a female student studying B.Tech in Hyderabad. Our family income is 3.5 lakhs. Which scholarships can I apply for?",
-    expectedOutcome: "ePASS correctly marked as 'A requirement appears unmet' due to verified income threshold. Bridge the Gap finds AICTE Pragati & CSSS."
+    expectedOutcome: "ePASS correctly evaluated as Doesn't match. Bridge the Gap finds AICTE Pragati and CSSS based on verified conditions."
   },
   {
     id: "scenario-3",
-    title: "Scenario 3: Missing Information",
+    title: "Scenario C: More Information Needed",
     tagline: "Student Omits Income & Social Category",
-    badge: "Needs Information",
+    badge: "More info needed",
     badgeColor: "bg-amber-100 text-amber-800 border-amber-300",
     description:
-      "A student provides their course and state but omits annual income and social category. The engine strictly avoids guessing or inventing percentages, marking criteria as 'Needs information' and requesting the missing fields.",
+      "A student provides course and state but omits annual family income and social category. The engine avoids guessing or fabricating probabilities, explicitly requesting the missing fields.",
     profile: {
       state: "Telangana",
       course: "B.Tech",
@@ -64,6 +64,6 @@ export const DEMO_SCENARIOS = [
       age: 20
     },
     sampleSpeech: "I study B.Tech in Telangana. Can you find schemes for me?",
-    expectedOutcome: "Criteria marked as 'Needs information'. Promptly asks user for annual income and category to enable deterministic evaluation."
+    expectedOutcome: "Criteria evaluated as More information needed. Missing fields are highlighted to complete evaluation."
   }
 ];
